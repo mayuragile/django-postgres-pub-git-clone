@@ -1,0 +1,26 @@
+version: "3.3"
+   
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: .
+    volumes:
+      - .:/django-postgres-pub-git-clone
+    depends_on:
+      - db
+    web_migrate:
+      extends:
+        service: web
+      command: python manage.py migrate
+    web_run:
+      extends:
+        service: web
+      command: python manage.py runserver 0.0.0.0:8000
+      ports:
+        - "8000:8000"
+        #
